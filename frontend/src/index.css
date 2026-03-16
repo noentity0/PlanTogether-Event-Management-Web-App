@@ -1,0 +1,42 @@
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  font-family: "Instrument Sans", sans-serif;
+  background: #121212;
+}
+
+body {
+  @apply min-h-screen bg-hero-mesh text-textmain antialiased;
+}
+
+#root {
+  @apply min-h-screen;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.glass-panel {
+  @apply border border-white/10 bg-surface shadow-soft backdrop-blur-xl;
+}
+
+.input-base {
+  @apply w-full rounded-2xl border border-white/10 bg-field px-4 py-3 text-sm text-textmain outline-none transition placeholder:text-textmuted focus:border-accent focus:bg-field;
+}
+
+.button-primary {
+  @apply inline-flex items-center justify-center rounded-full bg-gradient-to-r from-accent to-accent-light px-5 py-3 text-sm font-semibold text-appbg transition hover:scale-[1.01] hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+.button-secondary {
+  @apply inline-flex items-center justify-center rounded-full border border-white/15 bg-field px-5 py-3 text-sm font-semibold text-textmain transition hover:bg-[#333333];
+}
