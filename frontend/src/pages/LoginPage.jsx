@@ -37,7 +37,7 @@ function LoginPage() {
       <div className="glass-panel rounded-[2rem] p-8 sm:p-10">
         <p className="text-xs uppercase tracking-[0.35em] text-accent-light">Welcome back</p>
         <h1 className="mt-3 text-4xl font-bold tracking-tight text-white">Sign in to PlanTogether</h1>
-        <p className="mt-3 text-sm leading-6 text-textmuted">Access your dashboard, create events, and manage everything you host.</p>
+        <p className="mt-3 text-sm leading-6 text-textmuted">Access your profile, create events, and manage everything you host.</p>
 
         <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
           <div>

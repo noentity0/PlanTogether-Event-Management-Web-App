@@ -15,7 +15,10 @@ async def register_user(
     payload: RegisterRequest,
     db: AsyncIOMotorDatabase = Depends(get_db),
 ) -> dict:
+    name = payload.name.strip()
     email = payload.email.strip().lower()
+    if len(name) < 2:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Enter a valid name")
     if "@" not in email:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Enter a valid email")
 
@@ -27,6 +30,7 @@ async def register_user(
         )
 
     user = {
+        "name": name,
         "email": email,
         "password_hash": hash_password(payload.password),
         "created_at": now_utc(),
@@ -64,4 +68,3 @@ async def login_user(
 @router.get("/verify", response_model=UserResponse)
 async def verify_token(current_user: dict = Depends(get_current_user)) -> dict:
     return serialize_user(current_user)
-

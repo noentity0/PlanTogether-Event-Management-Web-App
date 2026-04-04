@@ -9,6 +9,7 @@ const emptyForm = {
   time: "",
   location: "",
   category: "Tech",
+  capacity: "",
 };
 
 function EventForm({
@@ -23,6 +24,42 @@ function EventForm({
   const [form, setForm] = useState({ ...emptyForm, ...initialValues });
   const [validationError, setValidationError] = useState("");
 
+  function validateForm(currentForm) {
+    const title = currentForm.title.trim();
+    const description = currentForm.description.trim();
+    const location = currentForm.location.trim();
+    const validCategories = EVENT_CATEGORIES.filter((category) => category !== "All");
+
+    if (!title || !description || !currentForm.date || !currentForm.time || !location || !currentForm.category) {
+      return "Please complete every field before submitting.";
+    }
+
+    if (title.length < 3 || title.length > 120) {
+      return "Title must be between 3 and 120 characters.";
+    }
+
+    if (description.length < 10 || description.length > 1500) {
+      return "Description must be between 10 and 1500 characters.";
+    }
+
+    if (location.length < 2 || location.length > 200) {
+      return "Location must be between 2 and 200 characters.";
+    }
+
+    if (!validCategories.includes(currentForm.category)) {
+      return "Please choose a valid event category.";
+    }
+
+    if (currentForm.capacity) {
+      const capacityValue = Number(currentForm.capacity);
+      if (!Number.isInteger(capacityValue) || capacityValue < 1 || capacityValue > 10000) {
+        return "Capacity must be a whole number between 1 and 10000.";
+      }
+    }
+
+    return "";
+  }
+
   function handleChange(event) {
     const { name, value } = event.target;
     setForm((current) => ({ ...current, [name]: value }));
@@ -32,12 +69,19 @@ function EventForm({
     event.preventDefault();
     setValidationError("");
 
-    if (Object.values(form).some((value) => !String(value).trim())) {
-      setValidationError("Please complete every field before submitting.");
+    const error = validateForm(form);
+    if (error) {
+      setValidationError(error);
       return;
     }
 
-    await onSubmit(form);
+    await onSubmit({
+      ...form,
+      title: form.title.trim(),
+      description: form.description.trim(),
+      location: form.location.trim(),
+      capacity: form.capacity ? Number(form.capacity) : null,
+    });
   }
 
   const minDate = new Date().toISOString().split("T")[0];
@@ -61,6 +105,9 @@ function EventForm({
               name="title"
               value={form.title}
               onChange={handleChange}
+              minLength={3}
+              maxLength={120}
+              required
               className="input-base"
               placeholder="Midnight Product Launch"
             />
@@ -75,6 +122,9 @@ function EventForm({
               name="description"
               value={form.description}
               onChange={handleChange}
+              minLength={10}
+              maxLength={1500}
+              required
               className="input-base min-h-36 resize-none"
               placeholder="Tell guests why this event is worth showing up for."
             />
@@ -91,6 +141,7 @@ function EventForm({
               min={minDate}
               value={form.date}
               onChange={handleChange}
+              required
               className="input-base"
             />
           </div>
@@ -105,6 +156,7 @@ function EventForm({
               type="time"
               value={form.time}
               onChange={handleChange}
+              required
               className="input-base"
             />
           </div>
@@ -118,6 +170,9 @@ function EventForm({
               name="location"
               value={form.location}
               onChange={handleChange}
+              minLength={2}
+              maxLength={200}
+              required
               className="input-base"
               placeholder="Bangalore Convention Hall"
             />
@@ -132,6 +187,7 @@ function EventForm({
               name="category"
               value={form.category}
               onChange={handleChange}
+              required
               className="input-base"
             >
               {EVENT_CATEGORIES.filter((category) => category !== "All").map((category) => (
@@ -140,6 +196,23 @@ function EventForm({
                 </option>
               ))}
             </select>
+          </div>
+
+          <div>
+            <label className="mb-2 block text-sm font-medium text-textmain" htmlFor="capacity">
+              Capacity
+            </label>
+            <input
+              id="capacity"
+              name="capacity"
+              type="number"
+              min="1"
+              max="10000"
+              value={form.capacity}
+              onChange={handleChange}
+              className="input-base"
+              placeholder="Optional"
+            />
           </div>
 
           {(validationError || serverError) && (

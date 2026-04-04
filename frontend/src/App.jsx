@@ -14,10 +14,10 @@ import RegisterPage from "./pages/RegisterPage";
 
 function App() {
   return (
-    <div className="relative min-h-screen overflow-hidden">
+    <div className="relative min-h-screen overflow-x-hidden">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-[-8rem] top-20 h-72 w-72 rounded-full bg-accent/10 blur-3xl" />
-        <div className="absolute right-[-6rem] top-40 h-80 w-80 rounded-full bg-accent-light/10 blur-3xl" />
+        <div className="absolute left-[-4rem] top-16 hidden h-48 w-48 rounded-full bg-accent/8 blur-2xl md:block" />
+        <div className="absolute right-[-4rem] top-32 hidden h-56 w-56 rounded-full bg-accent-light/8 blur-2xl lg:block" />
       </div>
 
       <Navbar />

@@ -6,7 +6,7 @@ import { useAuth } from "../context/AuthContext";
 function RegisterPage() {
   const { register } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
   const [showLoginHint, setShowLoginHint] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,9 +51,26 @@ function RegisterPage() {
       <div className="glass-panel rounded-[2rem] p-8 sm:p-10">
         <p className="text-xs uppercase tracking-[0.35em] text-accent-light">Join PlanTogether</p>
         <h1 className="mt-3 text-4xl font-bold tracking-tight text-white">Create your account</h1>
-        <p className="mt-3 text-sm leading-6 text-textmuted">Sign up once, stay logged in, and start hosting events in a few minutes.</p>
+        <p className="mt-3 text-sm leading-6 text-textmuted">Add your name, sign up once, and start hosting or joining events in a few minutes.</p>
 
         <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
+          <div>
+            <label className="mb-2 block text-sm font-medium text-textmain" htmlFor="name">
+              Name
+            </label>
+            <input
+              id="name"
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              minLength="2"
+              maxLength="80"
+              required
+              className="input-base"
+              placeholder="Your full name"
+            />
+          </div>
+
           <div>
             <label className="mb-2 block text-sm font-medium text-textmain" htmlFor="email">
               Email
@@ -64,6 +81,7 @@ function RegisterPage() {
               type="email"
               value={form.email}
               onChange={handleChange}
+              required
               className="input-base"
               placeholder="you@example.com"
             />
@@ -80,6 +98,7 @@ function RegisterPage() {
               minLength="6"
               value={form.password}
               onChange={handleChange}
+              required
               className="input-base"
               placeholder="At least 6 characters"
             />

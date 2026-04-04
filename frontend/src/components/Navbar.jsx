@@ -17,7 +17,7 @@ function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-20 border-b border-white/10 bg-appbg/90 backdrop-blur-xl">
+    <header className="sticky top-0 z-20 border-b border-white/10 bg-appbg/95">
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
         <Link to="/" className="flex items-center gap-3">
           <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-accent to-accent-light text-lg font-bold text-appbg">
@@ -44,7 +44,7 @@ function Navbar() {
                 Create Event
               </NavLink>
               <NavLink to="/profile" className={navLinkClass}>
-                Dashboard
+                Profile
               </NavLink>
             </>
           )}
@@ -54,7 +54,7 @@ function Navbar() {
           {isAuthenticated ? (
             <>
               <div className="hidden rounded-full border border-white/10 bg-field px-4 py-2 text-sm text-textmuted sm:block">
-                {user?.email}
+                {user?.name || user?.email}
               </div>
               <button type="button" onClick={handleLogout} className="button-secondary">
                 Logout
@@ -86,7 +86,7 @@ function Navbar() {
               Create
             </NavLink>
             <NavLink to="/profile" className={navLinkClass}>
-              Dashboard
+              Profile
             </NavLink>
           </>
         )}

@@ -26,7 +26,7 @@ h4 {
 }
 
 .glass-panel {
-  @apply border border-white/10 bg-surface shadow-soft backdrop-blur-xl;
+  @apply border border-white/10 bg-surface shadow-soft;
 }
 
 .input-base {

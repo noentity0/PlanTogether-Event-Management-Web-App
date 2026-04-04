@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import EventForm from "../components/EventForm";
 import { useAuth } from "../context/AuthContext";
 import { useEvents } from "../context/EventContext";
+import { formatApiError } from "../utils/apiErrors";
 
 function EditEventPage() {
   const { eventId } = useParams();
@@ -22,7 +23,7 @@ function EditEventPage() {
         const data = await getEvent(eventId);
         setEvent(data);
       } catch (requestError) {
-        setError(requestError.response?.data?.detail || "Unable to load the event.");
+        setError(formatApiError(requestError, "Unable to load the event."));
       } finally {
         setLoading(false);
       }
@@ -39,7 +40,7 @@ function EditEventPage() {
       await updateEvent(eventId, form);
       navigate(`/events/${eventId}`);
     } catch (requestError) {
-      setError(requestError.response?.data?.detail || "Unable to update the event.");
+      setError(formatApiError(requestError, "Unable to update the event."));
     } finally {
       setIsSubmitting(false);
     }
@@ -70,7 +71,7 @@ function EditEventPage() {
   return (
     <EventForm
       heading="Edit your event"
-      descriptionText="Adjust the details and keep attendees up to date without creating a duplicate listing."
+      descriptionText="Adjust the details, capacity, and timing without creating a duplicate listing."
       initialValues={{
         title: event.title,
         description: event.description,
@@ -78,6 +79,7 @@ function EditEventPage() {
         time: event.time,
         location: event.location,
         category: event.category,
+        capacity: event.capacity ?? "",
       }}
       submitLabel="Save changes"
       serverError={error}

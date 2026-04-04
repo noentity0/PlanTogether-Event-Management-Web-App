@@ -52,3 +52,24 @@ async def get_current_user(
         )
 
     return user
+
+
+async def get_optional_current_user(
+    authorization: str | None = Header(default=None),
+    db: AsyncIOMotorDatabase = Depends(get_db),
+) -> dict | None:
+    if not authorization or not authorization.startswith("Bearer "):
+        return None
+
+    token = authorization.replace("Bearer ", "", 1).strip()
+
+    try:
+        payload = decode_access_token(token)
+    except (ExpiredSignatureError, InvalidTokenError):
+        return None
+
+    user_id = payload.get("sub")
+    if not user_id or not is_valid_object_id(user_id):
+        return None
+
+    return await db.users.find_one({"_id": ObjectId(user_id)})

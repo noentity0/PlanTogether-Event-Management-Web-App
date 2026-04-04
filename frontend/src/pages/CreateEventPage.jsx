@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import EventForm from "../components/EventForm";
 import { useEvents } from "../context/EventContext";
+import { formatApiError } from "../utils/apiErrors";
 
 function CreateEventPage() {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ function CreateEventPage() {
       await createEvent(form);
       navigate("/profile");
     } catch (requestError) {
-      setError(requestError.response?.data?.detail || "Unable to create the event.");
+      setError(formatApiError(requestError, "Unable to create the event."));
     } finally {
       setIsSubmitting(false);
     }
@@ -27,7 +28,7 @@ function CreateEventPage() {
   return (
     <EventForm
       heading="Create a new event"
-      descriptionText="Fill in the essentials and publish an event that attendees can discover right away."
+      descriptionText="Fill in the essentials, set an optional capacity, and publish an event people can discover, save, and join right away."
       submitLabel="Publish event"
       serverError={error}
       isSubmitting={isSubmitting}
@@ -37,4 +38,3 @@ function CreateEventPage() {
 }
 
 export default CreateEventPage;
-

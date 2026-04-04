@@ -13,7 +13,10 @@ const categoryStyles = {
 
 function EventCard({ event, showOwner = false }) {
   return (
-    <article className="glass-panel group flex h-full flex-col rounded-[2rem] p-6 transition hover:-translate-y-1 hover:bg-[#232323]">
+    <Link
+      to={`/events/${event.id}`}
+      className="glass-panel group flex h-full flex-col rounded-[2rem] p-6 transition hover:-translate-y-1 hover:bg-[#232323] focus:outline-none focus:ring-2 focus:ring-accent/60"
+    >
       <div className="mb-5 flex items-start justify-between gap-3">
         <span className={`rounded-full px-3 py-1 text-xs font-semibold ${categoryStyles[event.category]}`}>
           {event.category}
@@ -28,6 +31,17 @@ function EventCard({ event, showOwner = false }) {
         <p className="line-clamp-3 text-sm leading-6 text-textmuted">{event.description}</p>
       </div>
 
+      <div className="mt-6 flex flex-wrap gap-2 text-xs font-medium text-textmuted">
+        <span className="rounded-full border border-white/10 px-3 py-1">
+          {event.attendee_count} registered
+        </span>
+        {event.capacity ? (
+          <span className="rounded-full border border-white/10 px-3 py-1">
+            {event.available_spots} spots left
+          </span>
+        ) : null}
+      </div>
+
       <div className="mt-6 space-y-2 text-sm text-textmuted">
         <p>
           <span className="text-[#8D8D8D]">When:</span> {formatEventTime(event.time)}
@@ -37,18 +51,11 @@ function EventCard({ event, showOwner = false }) {
         </p>
         {showOwner && (
           <p>
-            <span className="text-[#8D8D8D]">Host:</span> {event.created_by_email}
+            <span className="text-[#8D8D8D]">Host:</span> {event.created_by_name}
           </p>
         )}
       </div>
-
-      <Link
-        to={`/events/${event.id}`}
-        className="mt-6 inline-flex w-fit items-center text-sm font-semibold text-accent-light transition group-hover:text-accent"
-      >
-        View details
-      </Link>
-    </article>
+    </Link>
   );
 }
 
