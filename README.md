@@ -28,11 +28,12 @@ The overall design direction is meant to feel like a modern event discovery plat
 
 ### Backend
 
-- FastAPI
-- Motor
+- Node.js
+- Express
 - MongoDB
-- PyJWT
-- Bcrypt
+- Mongoose
+- JSON Web Token
+- BcryptJS
 
 ## Main Features
 
@@ -219,12 +220,13 @@ Some features are important to explain clearly because the behavior is not obvio
 ```text
 EventWeb/
 |-- backend/
-|   |-- app/
+|   |-- src/
+|   |   |-- config/
+|   |   |-- middleware/
 |   |   |-- models/
 |   |   |-- routes/
 |   |   `-- utils/
-|   |-- requirements.txt
-|   `-- server.py
+|   `-- package.json
 |-- frontend/
 |   |-- src/
 |   |   |-- api/
@@ -241,10 +243,9 @@ EventWeb/
 
 ```bash
 cd backend
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn server:app --reload --host 0.0.0.0 --port 8001
+copy .env.example .env
+npm install
+npm run dev
 ```
 
 Backend environment variables are defined in `backend/.env`:
@@ -256,6 +257,7 @@ JWT_SECRET_KEY=change-me-in-production
 JWT_ALGORITHM=HS256
 JWT_EXPIRE_MINUTES=1440
 FRONTEND_URL=http://localhost:5173
+PORT=8001
 ```
 
 ## Frontend Setup
@@ -305,5 +307,5 @@ VITE_BACKEND_URL=http://localhost:8001
 
 ## Verification
 
-- Backend Python modules were syntax-checked with `python -m compileall backend/app`
-- Frontend production build could not be completed inside the current sandbox because Vite/esbuild failed with `spawn EPERM`
+- Backend files can be syntax-checked with `node --check` on the `backend/src` entry points
+- Frontend production build may still depend on local Node/Vite permissions in your environment
