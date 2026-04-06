@@ -19,11 +19,11 @@
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#000000" flood-opacity="0.28"/>
     </filter>
-    <marker id="arrowOrange" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
-      <path d="M0 0L12 6L0 12V0Z" fill="#FF8A36"/>
+    <marker id="arrowOrange" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0 0L6 3L0 6V0Z" fill="#FF8A36"/>
     </marker>
-    <marker id="arrowBlue" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
-      <path d="M0 0L12 6L0 12V0Z" fill="#3DB5FF"/>
+    <marker id="arrowBlue" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0 0L6 3L0 6V0Z" fill="#3DB5FF"/>
     </marker>
     <style>
       .title { font: 700 34px 'Segoe UI', Arial, sans-serif; fill: #F7F8FA; }
@@ -34,6 +34,14 @@
       .cardText { font: 400 13px 'Segoe UI', Arial, sans-serif; fill: #B7C2CF; }
       .cardTextStrong { font: 600 13px 'Segoe UI', Arial, sans-serif; fill: #E7EDF5; }
       .pill { font: 600 12px 'Segoe UI', Arial, sans-serif; fill: #F8FAFC; }
+      .pillOverlay {
+        font: 600 12px 'Segoe UI', Arial, sans-serif;
+        fill: #F8FAFC;
+        stroke: #0F1620;
+        stroke-width: 8;
+        paint-order: stroke fill;
+        stroke-linejoin: round;
+      }
       .tiny { font: 600 12px 'Segoe UI', Arial, sans-serif; fill: #A7B3C0; }
       .mono { font: 600 11px Consolas, 'Courier New', monospace; fill: #FFD5B1; }
     </style>
@@ -43,7 +51,6 @@
   <rect x="34" y="34" width="1532" height="912" rx="26" stroke="#253243" stroke-width="2"/>
 
   <text x="72" y="90" class="title">PlanTogether - High-Level Architecture</text>
-  <text x="72" y="122" class="subtitle">Current project snapshot based on the React/Vite frontend, Express API, MongoDB persistence, JWT auth, and Docker Compose runtime in this repository.</text>
 
   <rect x="72" y="162" width="220" height="376" rx="24" fill="url(#panel)" stroke="#2A394A" filter="url(#shadow)"/>
   <text x="100" y="205" class="zoneSmall">Clients</text>
@@ -177,20 +184,16 @@
   <rect x="1114" y="854" width="148" height="30" rx="15" fill="#172230" stroke="#4376A7"/>
   <text x="1152" y="873" class="pill">Profile Views</text>
 
-  <path d="M292 278H330" stroke="#3DB5FF" stroke-width="4" stroke-linecap="round" marker-end="url(#arrowBlue)"/>
-  <path d="M800 486H844" stroke="#FF8A36" stroke-width="4" stroke-linecap="round" marker-end="url(#arrowOrange)"/>
-  <path d="M1298 350H1328" stroke="#FF8A36" stroke-width="4" stroke-linecap="round" marker-end="url(#arrowOrange)"/>
-  <path d="M1298 610H1328" stroke="#FF8A36" stroke-width="4" stroke-linecap="round" marker-end="url(#arrowOrange)"/>
-  <path d="M668 556V620H876" stroke="#64748B" stroke-width="3" stroke-linecap="round" stroke-dasharray="10 10" marker-end="url(#arrowOrange)"/>
-  <path d="M668 492V434" stroke="#64748B" stroke-width="3" stroke-linecap="round" stroke-dasharray="10 10" marker-end="url(#arrowBlue)"/>
-  <path d="M1430 492V462" stroke="#5E7F63" stroke-width="3" stroke-linecap="round" marker-end="url(#arrowBlue)"/>
+  <path d="M292 278H330" stroke="#3DB5FF" stroke-width="2.25" stroke-linecap="round" marker-end="url(#arrowBlue)"/>
+  <path d="M800 486H844" stroke="#FF8A36" stroke-width="2.25" stroke-linecap="round" marker-end="url(#arrowOrange)"/>
+  <path d="M1298 350H1328" stroke="#FF8A36" stroke-width="2.25" stroke-linecap="round" marker-end="url(#arrowOrange)"/>
+  <path d="M1298 610H1328" stroke="#FF8A36" stroke-width="2.25" stroke-linecap="round" marker-end="url(#arrowOrange)"/>
+  <path d="M668 556V620H876" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 7" marker-end="url(#arrowOrange)"/>
+  <path d="M744 432V434" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 7" marker-end="url(#arrowBlue)"/>
+  <path d="M1430 492V462" stroke="#5E7F63" stroke-width="2" stroke-linecap="round" marker-end="url(#arrowBlue)"/>
 
-  <rect x="486" y="112" width="168" height="30" rx="15" fill="#122536" stroke="#2E5C82"/>
-  <text x="511" y="131" class="pill">HTTP / JSON over Axios</text>
-  <rect x="1022" y="112" width="162" height="30" rx="15" fill="#2B1B10" stroke="#9C5B28"/>
-  <text x="1060" y="131" class="pill">JWT + Validation</text>
-  <rect x="1332" y="112" width="146" height="30" rx="15" fill="#15261B" stroke="#4E8460"/>
-  <text x="1363" y="131" class="pill">Mongoose ODM</text>
+  <text x="570" y="131" class="pillOverlay" text-anchor="middle">HTTP / JSON over Axios</text>
+  <text x="1103" y="131" class="pillOverlay" text-anchor="middle">JWT + Validation</text>
+  <text x="1405" y="131" class="pillOverlay" text-anchor="middle">Mongoose ODM</text>
 
-  <text x="78" y="934" class="tiny">Generated from current repo structure: `frontend/`, `backend/`, `docker-compose.yml`, AuthContext/EventContext, Express auth/events routes, Mongoose User/Event models.</text>
 </svg>
