@@ -37,3 +37,4 @@ frontend/reports/
 .scannerwork/
 .sonar/
 .sonarqube/
+.sonar-project.properties/
