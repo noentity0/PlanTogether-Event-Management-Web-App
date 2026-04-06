@@ -21,9 +21,19 @@ backend/.env.*.local
 frontend/node_modules/
 frontend/dist/
 frontend/.vite/
+frontend/.npm-cache/
 frontend/.env
 frontend/.env.local
 frontend/.env.*.local
 
+backend/.npm-cache/
+backend/reports/
+frontend/reports/
+
 *.pyc
 .DS_Store
+
+# SonarQube / SonarScanner
+.scannerwork/
+.sonar/
+.sonarqube/
