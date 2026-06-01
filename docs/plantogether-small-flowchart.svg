@@ -1,0 +1,79 @@
+<svg width="1200" height="760" viewBox="0 0 1200 760" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="760" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F7FAFC"/>
+      <stop offset="1" stop-color="#EEF3F8"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="150%" height="160%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#7C8A99" flood-opacity="0.16"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8.5" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10V0Z" fill="#5B7086"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="8.5" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10V0Z" fill="#D85C5C"/>
+    </marker>
+    <style>
+      .title { font: 700 30px 'Segoe UI', Arial, sans-serif; fill: #16324A; }
+      .text { font: 400 14px 'Segoe UI', Arial, sans-serif; fill: #60768A; }
+      .strong { font: 700 20px 'Segoe UI', Arial, sans-serif; fill: #17324B; }
+      .label {
+        font: 600 12px 'Segoe UI', Arial, sans-serif;
+        fill: #486076;
+        stroke: #F7FAFC;
+        stroke-width: 8;
+        paint-order: stroke fill;
+        stroke-linejoin: round;
+      }
+    </style>
+  </defs>
+
+  <rect width="1200" height="760" rx="24" fill="url(#bg)"/>
+  <rect x="24" y="24" width="1152" height="712" rx="20" fill="#FFFFFF" stroke="#D9E2EA" stroke-width="2"/>
+
+  <text x="60" y="80" class="title">PlanTogether Small System Flowchart</text>
+
+  <rect x="470" y="110" width="260" height="70" rx="35" fill="#EAF3FF" stroke="#9EC3F4" filter="url(#shadow)"/>
+  <text x="600" y="153" text-anchor="middle" class="strong">User Opens App</text>
+
+  <path d="M600 180V225" stroke="#5B7086" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+  <rect x="400" y="245" width="400" height="90" rx="22" fill="#EEF6FF" stroke="#B8D5FB" filter="url(#shadow)"/>
+  <text x="430" y="290" class="strong">Frontend (React + Vite)</text>
+  <text x="430" y="316" class="text">Loads pages, reads stored token, and sends Axios requests.</text>
+
+  <path d="M600 335V380" stroke="#5B7086" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+  <polygon points="600,380 730,465 600,550 470,465" fill="#FFF8EA" stroke="#E4C387" stroke-width="2" filter="url(#shadow)"/>
+  <text x="600" y="455" text-anchor="middle" class="strong">Authenticated?</text>
+  <text x="600" y="480" text-anchor="middle" class="text">Valid JWT token available</text>
+
+  <path d="M730 465H1000" stroke="#5B7086" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <text x="810" y="446" class="label">Yes</text>
+
+  <rect x="1000" y="420" width="140" height="90" rx="22" fill="#EEF9F2" stroke="#BFE2CB" filter="url(#shadow)"/>
+  <text x="1070" y="455" text-anchor="middle" class="strong">Protected</text>
+  <text x="1070" y="480" text-anchor="middle" class="text">Create, save,</text>
+  <text x="1070" y="500" text-anchor="middle" class="text">comment, register</text>
+
+  <path d="M470 465H180" stroke="#5B7086" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <text x="300" y="446" class="label">No</text>
+
+  <rect x="60" y="420" width="160" height="90" rx="22" fill="#F3F7FB" stroke="#CBD9E6" filter="url(#shadow)"/>
+  <text x="140" y="455" text-anchor="middle" class="strong">Public Flow</text>
+  <text x="140" y="480" text-anchor="middle" class="text">Browse events</text>
+  <text x="140" y="500" text-anchor="middle" class="text">Login / Register</text>
+
+  <path d="M1070 510V575H760" stroke="#5B7086" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <text x="860" y="556" class="label">API request with token</text>
+
+  <rect x="420" y="595" width="360" height="90" rx="22" fill="#FFF8EA" stroke="#E4C387" filter="url(#shadow)"/>
+  <text x="450" y="640" class="strong">Backend API + MongoDB</text>
+  <text x="450" y="666" class="text">Validate request, verify JWT, apply business rules, read/write data.</text>
+
+  <path d="M420 640H220V530" stroke="#D85C5C" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="8 8" marker-end="url(#arrowRed)"/>
+  <text x="244" y="618" class="label">Invalid token / error → redirect to login</text>
+
+  <path d="M600 595V550" stroke="#5B7086" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <text x="620" y="578" class="label">JSON response</text>
+</svg>
