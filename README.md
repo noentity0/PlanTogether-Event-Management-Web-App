@@ -45,8 +45,9 @@ Implemented with:
 
 - JWT-based authentication
 - hashed passwords using Bcrypt
-- persistent login using local storage
+- secure httpOnly cookie-based session storage
 - backend token verification on app load
+- logout endpoint that clears the auth cookie
 
 Additional behavior:
 
@@ -54,7 +55,27 @@ Additional behavior:
 - the user `name` is shown in profile, navbar, host information, and comments
 - older users without a saved name are handled with a safe fallback derived from email
 
-### 2. Create, Edit, and Delete Events
+### 2. Role-Based Access
+
+The backend supports two roles: `user` and `admin`.
+
+Implemented with:
+
+- `role` field on the user schema
+- default role of `user` for normal registrations
+- admin assignment through the `ADMIN_EMAILS` environment variable
+- reusable `requireAdmin` middleware for admin-only APIs
+- admin-only `GET /api/admin/users` endpoint
+- admin moderation permissions for deleting inappropriate events and comments
+
+Current behavior:
+
+- normal users can use event features and manage only their own content
+- admins can access protected admin routes
+- admins can delete any event listing or comment for moderation
+- users cannot choose their own role from the frontend request body
+
+### 3. Create, Edit, and Delete Events
 
 Authenticated users can:
 
@@ -72,7 +93,7 @@ Important rule:
 
 - events can only be created or updated with future date/time values
 
-### 3. Upcoming Event Discovery
+### 4. Upcoming Event Discovery
 
 The `Home` and `Explore` pages are focused on future events.
 
@@ -82,7 +103,7 @@ Implemented with:
 - sorted upcoming events
 - shared event fetching through the React event context
 
-### 4. Search and Category Filtering
+### 5. Search and Category Filtering
 
 Users can search and filter upcoming events.
 
@@ -93,7 +114,7 @@ Implemented with:
 - category filter support for:
   Music, Tech, Sports, Art, Food, Business
 
-### 5. Registration System
+### 6. Registration System
 
 Users can register for events from the event details page.
 
@@ -110,7 +131,7 @@ Current behavior:
 - if the event is full, registration is blocked with a clear backend error
 - users can also leave an event after registering
 
-### 6. Capacity Tracking
+### 7. Capacity Tracking
 
 Each event can optionally have a maximum number of attendees.
 
@@ -121,7 +142,7 @@ Implemented with:
 - backend protection against reducing capacity below already registered attendees
 - frontend display of remaining spots
 
-### 7. Save / Bookmark Events
+### 8. Save / Bookmark Events
 
 Users can save events for later.
 
@@ -132,7 +153,7 @@ Implemented with:
 - saved count on event cards and event details
 - dedicated `Saved events` section in the user profile
 
-### 8. Comment System
+### 9. Comment System
 
 Users can comment on event detail pages.
 
@@ -151,7 +172,7 @@ Comment permissions:
 
 This is one of the most important interaction features in the app because it allows users to ask questions and engage directly under the event.
 
-### 9. Profile Page
+### 10. Profile Page
 
 Each logged-in user has a profile page that collects their event activity.
 
@@ -164,7 +185,7 @@ Implemented with:
 - next hosted event summary
 - next attending event summary
 
-### 10. Host Information
+### 11. Host Information
 
 Event host details are shown using the user’s `name` instead of relying only on email.
 
@@ -174,7 +195,7 @@ Implemented with:
 - returning host information in event API responses
 - displaying the host name on cards and detail pages
 
-### 11. Event Detail Experience
+### 12. Event Detail Experience
 
 The event details page now works as the main interaction hub.
 
@@ -192,7 +213,7 @@ It includes:
 - host-only manage tools
 - host-only attendee visibility
 
-### 12. Share Event
+### 13. Share Event
 
 Users can share an event from the event details page.
 
@@ -206,6 +227,9 @@ Implemented with:
 Some features are important to explain clearly because the behavior is not obvious just by looking at the UI:
 
 - Only the original creator can edit or delete an event.
+- Users have a `user` or `admin` role.
+- Admin-only routes require authentication plus the `admin` role.
+- Admin users can delete any event or comment for moderation.
 - The event owner sees management controls and attendee lists.
 - Other users do not see owner-only management controls.
 - Comments can be deleted only by:
@@ -258,7 +282,14 @@ JWT_ALGORITHM=HS256
 JWT_EXPIRE_MINUTES=1440
 FRONTEND_URL=http://localhost:5173
 PORT=8001
+COOKIE_SECURE=false
+COOKIE_SAMESITE=lax
+ADMIN_EMAILS=admin@example.com
 ```
+
+`ADMIN_EMAILS` is a comma-separated allowlist. Users who register with one of those emails receive the `admin` role; all other users receive the default `user` role.
+
+JWTs are stored in an httpOnly cookie named `plantogether_access_token`. Use `COOKIE_SECURE=true` and `COOKIE_SAMESITE=none` for a cross-site HTTPS deployment such as Vercel frontend plus Render backend.
 
 ## Frontend Setup
 
@@ -280,6 +311,7 @@ VITE_BACKEND_URL=http://localhost:8001
 
 - `POST /api/auth/register`
 - `POST /api/auth/login`
+- `POST /api/auth/logout`
 - `GET /api/auth/verify`
 
 ### Events
@@ -299,11 +331,49 @@ VITE_BACKEND_URL=http://localhost:8001
 - `POST /api/events/{event_id}/comments`
 - `DELETE /api/events/{event_id}/comments/{comment_id}`
 
+### Admin
+
+- `GET /api/admin/users` - admin-only list of registered users
+
 ## Notes
 
 - `GET /api/events` supports `search`, `category`, and `include_past` query params.
 - Home and Explore currently show future events by default.
 - Existing older users and events are handled with serializer fallbacks where possible.
+
+## Security Notes
+
+- Passwords are hashed with Bcrypt before storing them in MongoDB.
+- JWTs are sent through the `plantogether_access_token` httpOnly cookie instead of frontend `localStorage`.
+- The frontend uses `withCredentials: true` so the browser sends the cookie with API requests.
+- CORS is restricted to the configured `FRONTEND_URL` and local Vite development URL.
+- Admin access is controlled server-side through the stored user `role`; the frontend cannot grant admin privileges.
+
+## Scalability Notes
+
+The project uses a modular Express structure so new modules can be added under `routes`, `models`, `middleware`, and `utils` without changing unrelated features.
+
+For scaling beyond a small deployment:
+
+- use MongoDB Atlas as the production database instead of running MongoDB locally
+- deploy the Express backend on Render using the existing `npm start` command
+- host the React frontend on Vercel, Netlify, or any static hosting provider
+- keep deployment settings in environment variables for MongoDB, JWT, cookies, CORS, and admin emails
+- add Cloudinary later for event listing images and store the image URLs in MongoDB
+- add API rate limiting later to reduce login abuse and repeated heavy requests
+- use a load balancer if the backend needs to run on more than one server instance
+- keep backend code modular so features such as payments, notifications, or image uploads can be added without rewriting the whole app
+
+## Future Improvements
+
+These are planned extension points that fit the current architecture but are not required for the current version:
+
+- use MongoDB Atlas as the production database instead of a local MongoDB container
+- deploy the backend API on Render using the existing `npm start` command
+- add Cloudinary for event listing images, with image URLs stored on each event document
+- extend the event create/edit form so hosts can upload photos for each listing
+- add image validation for file type, file size, and allowed upload count before saving listing media
+- serve optimized image variants from Cloudinary for faster event cards and detail pages
 
 ## Verification
 

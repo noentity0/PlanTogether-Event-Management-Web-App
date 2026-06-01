@@ -112,6 +112,9 @@ function ProfilePage() {
           <div className="rounded-[2rem] border border-white/10 bg-surface p-6">
             <p className="text-base font-semibold text-white">{user?.name || "Event host"}</p>
             <p className="mt-1 text-sm text-textmuted">{user?.email}</p>
+            <p className="mt-3 inline-flex rounded-full border border-white/10 bg-field px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-accent-light">
+              {user?.role || "user"}
+            </p>
             <p className="mt-5 text-sm leading-6 text-textmuted">
               Manage your hosted events, keep an eye on upcoming registrations, and jump back into saved plans anytime.
             </p>

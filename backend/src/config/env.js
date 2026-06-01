@@ -10,4 +10,10 @@ module.exports = {
   jwtAlgorithm: process.env.JWT_ALGORITHM || "HS256",
   jwtExpireMinutes: Number(process.env.JWT_EXPIRE_MINUTES || 1440),
   frontendUrl: process.env.FRONTEND_URL || "http://localhost:5173",
+  cookieSecure: process.env.COOKIE_SECURE === "true",
+  cookieSameSite: process.env.COOKIE_SAMESITE || "lax",
+  adminEmails: String(process.env.ADMIN_EMAILS || "")
+    .split(",")
+    .map((email) => email.trim().toLowerCase())
+    .filter(Boolean),
 };

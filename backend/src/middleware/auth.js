@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
 const ApiError = require("../utils/apiError");
-const { decodeAccessToken } = require("../utils/security");
+const { ACCESS_TOKEN_COOKIE, decodeAccessToken } = require("../utils/security");
 
 function extractBearerToken(authorization) {
   if (!authorization || !authorization.startsWith("Bearer ")) {
@@ -11,6 +11,30 @@ function extractBearerToken(authorization) {
   }
 
   return authorization.replace("Bearer ", "").trim();
+}
+
+function extractCookieToken(cookieHeader) {
+  if (!cookieHeader) {
+    return null;
+  }
+
+  const cookies = cookieHeader.split(";").reduce((accumulator, entry) => {
+    const separatorIndex = entry.indexOf("=");
+    if (separatorIndex < 0) {
+      return accumulator;
+    }
+
+    const key = entry.slice(0, separatorIndex).trim();
+    const value = entry.slice(separatorIndex + 1).trim();
+    accumulator[key] = decodeURIComponent(value);
+    return accumulator;
+  }, {});
+
+  return cookies[ACCESS_TOKEN_COOKIE] || null;
+}
+
+function extractAccessToken(req) {
+  return extractBearerToken(req.headers.authorization) || extractCookieToken(req.headers.cookie);
 }
 
 async function resolveUserFromToken(token) {
@@ -31,7 +55,7 @@ async function resolveUserFromToken(token) {
 
 async function requireAuth(req, res, next) {
   try {
-    const token = extractBearerToken(req.headers.authorization);
+    const token = extractAccessToken(req);
 
     if (!token) {
       throw new ApiError(401, "Missing or invalid authorization header");
@@ -54,9 +78,23 @@ async function requireAuth(req, res, next) {
   }
 }
 
+function requireAdmin(req, res, next) {
+  if (!req.currentUser) {
+    next(new ApiError(401, "Authentication required"));
+    return;
+  }
+
+  if (req.currentUser.role !== "admin") {
+    next(new ApiError(403, "Admin access required"));
+    return;
+  }
+
+  next();
+}
+
 async function optionalAuth(req, res, next) {
   try {
-    const token = extractBearerToken(req.headers.authorization);
+    const token = extractAccessToken(req);
 
     if (!token) {
       req.currentUser = null;
@@ -74,5 +112,6 @@ async function optionalAuth(req, res, next) {
 
 module.exports = {
   optionalAuth,
+  requireAdmin,
   requireAuth,
 };

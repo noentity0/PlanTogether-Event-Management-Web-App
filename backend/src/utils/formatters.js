@@ -29,6 +29,7 @@ function serializeUser(user) {
     id: stringifyId(user._id),
     name: user.name || deriveDisplayName(user.email),
     email: user.email,
+    role: user.role || "user",
     created_at: user.createdAt || user.created_at,
   };
 }

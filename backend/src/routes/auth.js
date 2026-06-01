@@ -1,14 +1,30 @@
 const express = require("express");
 
+const { adminEmails } = require("../config/env");
 const User = require("../models/User");
 const { requireAuth } = require("../middleware/auth");
 const asyncHandler = require("../utils/asyncHandler");
 const ApiError = require("../utils/apiError");
 const { serializeUser } = require("../utils/formatters");
-const { createAccessToken, hashPassword, verifyPassword } = require("../utils/security");
+const {
+  ACCESS_TOKEN_COOKIE,
+  accessTokenCookieOptions,
+  clearAccessTokenCookieOptions,
+  createAccessToken,
+  hashPassword,
+  verifyPassword,
+} = require("../utils/security");
 const { validateLoginPayload, validateRegisterPayload } = require("../utils/validation");
 
 const router = express.Router();
+
+function sendAuthenticatedUser(res, user, statusCode = 200) {
+  const token = createAccessToken(user._id.toString(), user.email);
+  res.cookie(ACCESS_TOKEN_COOKIE, token, accessTokenCookieOptions());
+  res.status(statusCode).json({
+    user: serializeUser(user),
+  });
+}
 
 router.post(
   "/register",
@@ -24,13 +40,10 @@ router.post(
       name,
       email,
       passwordHash: await hashPassword(password),
+      role: adminEmails.includes(email) ? "admin" : "user",
     });
 
-    const token = createAccessToken(user._id.toString(), user.email);
-    res.status(201).json({
-      token,
-      user: serializeUser(user),
-    });
+    sendAuthenticatedUser(res, user, 201);
   })
 );
 
@@ -44,13 +57,14 @@ router.post(
       throw new ApiError(401, "Invalid email or password");
     }
 
-    const token = createAccessToken(user._id.toString(), user.email);
-    res.json({
-      token,
-      user: serializeUser(user),
-    });
+    sendAuthenticatedUser(res, user);
   })
 );
+
+router.post("/logout", (req, res) => {
+  res.clearCookie(ACCESS_TOKEN_COOKIE, clearAccessTokenCookieOptions());
+  res.status(204).send();
+});
 
 router.get(
   "/verify",

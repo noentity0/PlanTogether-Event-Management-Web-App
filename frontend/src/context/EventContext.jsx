@@ -85,9 +85,7 @@ export function EventProvider({ children }) {
   async function createEvent(payload) {
     const { data } = await axiosClient.post("/api/events", payload);
     await fetchEvents(activeFilters);
-    if (localStorage.getItem("plantogether_token")) {
-      await fetchMyEvents();
-    }
+    await fetchMyEvents();
     return data;
   }
 
@@ -95,9 +93,7 @@ export function EventProvider({ children }) {
     const { data } = await axiosClient.put(`/api/events/${eventId}`, payload);
     syncEventInCollections(data);
     await fetchEvents(activeFilters);
-    if (localStorage.getItem("plantogether_token")) {
-      await fetchMyEvents();
-    }
+    await fetchMyEvents();
     return data;
   }
 
@@ -106,9 +102,7 @@ export function EventProvider({ children }) {
     setEvents((current) => current.filter((event) => event.id !== eventId));
     setMyEvents((current) => current.filter((event) => event.id !== eventId));
     await fetchEvents(activeFilters);
-    if (localStorage.getItem("plantogether_token")) {
-      await fetchMyEvents();
-    }
+    await fetchMyEvents();
   }
 
   async function registerForEvent(eventId) {

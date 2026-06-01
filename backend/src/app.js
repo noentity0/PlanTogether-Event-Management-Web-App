@@ -4,6 +4,7 @@ const morgan = require("morgan");
 
 const { frontendUrl } = require("./config/env");
 const errorHandler = require("./middleware/errorHandler");
+const adminRoutes = require("./routes/admin");
 const authRoutes = require("./routes/auth");
 const eventRoutes = require("./routes/events");
 
@@ -23,6 +24,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/admin", adminRoutes);
 app.use("/api/events", eventRoutes);
 
 app.use(errorHandler);

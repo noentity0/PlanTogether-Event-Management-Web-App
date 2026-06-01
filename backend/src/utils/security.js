@@ -1,7 +1,9 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const { jwtAlgorithm, jwtExpireMinutes, jwtSecretKey } = require("../config/env");
+const { cookieSameSite, cookieSecure, jwtAlgorithm, jwtExpireMinutes, jwtSecretKey } = require("../config/env");
+
+const ACCESS_TOKEN_COOKIE = "plantogether_access_token";
 
 function hashPassword(password) {
   return bcrypt.hash(password, 10);
@@ -31,7 +33,29 @@ function decodeAccessToken(token) {
   });
 }
 
+function accessTokenCookieOptions() {
+  return {
+    httpOnly: true,
+    secure: cookieSecure,
+    sameSite: cookieSameSite,
+    maxAge: jwtExpireMinutes * 60 * 1000,
+    path: "/",
+  };
+}
+
+function clearAccessTokenCookieOptions() {
+  return {
+    httpOnly: true,
+    secure: cookieSecure,
+    sameSite: cookieSameSite,
+    path: "/",
+  };
+}
+
 module.exports = {
+  ACCESS_TOKEN_COOKIE,
+  accessTokenCookieOptions,
+  clearAccessTokenCookieOptions,
   hashPassword,
   verifyPassword,
   createAccessToken,

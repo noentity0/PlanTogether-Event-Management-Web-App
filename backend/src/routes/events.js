@@ -87,8 +87,12 @@ function isEventOwner(event, user) {
   return Boolean(user && event.createdBy && event.createdBy.toString() === user._id.toString());
 }
 
+function isAdmin(user) {
+  return user?.role === "admin";
+}
+
 function includePrivateLists(event, user) {
-  return isEventOwner(event, user);
+  return isEventOwner(event, user) || isAdmin(user);
 }
 
 function ensureCapacityAvailable(event) {
@@ -273,7 +277,7 @@ router.delete(
   asyncHandler(async (req, res) => {
     const event = await getEventOr404(req.params.eventId);
 
-    if (!isEventOwner(event, req.currentUser)) {
+    if (!isEventOwner(event, req.currentUser) && !isAdmin(req.currentUser)) {
       throw new ApiError(403, "You can only delete your own events");
     }
 
@@ -413,7 +417,7 @@ router.delete(
     const comment = event.comments[commentIndex];
     const authorId = comment.author?.id;
 
-    if (authorId !== req.currentUser._id.toString() && !isEventOwner(event, req.currentUser)) {
+    if (authorId !== req.currentUser._id.toString() && !isEventOwner(event, req.currentUser) && !isAdmin(req.currentUser)) {
       throw new ApiError(403, "You cannot delete this comment");
     }
 
